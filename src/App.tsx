@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { ArrowLeft, Bell, BookOpen, GraduationCap, Music2, Search, ShieldCheck, Sparkles } from 'lucide-react'
-import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { supabase } from './lib/supabase'
+import Admin from './Admin'
 
 type Announcement = { id: string; title: string; body: string; created_at: string }
 
 export default function App() {
+  if (window.location.pathname === '/admin') return <Admin />
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
