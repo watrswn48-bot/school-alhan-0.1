@@ -39,6 +39,7 @@ export default function App() {
       <nav className="nav container">
         <a className="brand" href="#"><span className="brand-mark"><Music2 size={23}/></span><span>ألحان تي اتشرومبي<small>بوابة المدرسة الإلكترونية</small></span></a>
         <a className="nav-link" href="#about">عن المدرسة</a>
+        <a className="nav-link" href={`${import.meta.env.BASE_URL}admin`}>لوحة الإدارة</a>
       </nav>
 
       <section className="hero">
