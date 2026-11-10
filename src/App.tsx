@@ -37,7 +37,7 @@ export default function App() {
   return (
     <main>
       <nav className="nav container">
-        <a className="brand" href="#"><span className="brand-mark"><Music2 size={23}/></span><span>{site.school_name}<small>{site.tagline}</small></span></a>
+        <a className="brand" href="#"><span className="brand-mark">{site.logo_url ? <img src={site.logo_url} alt="" /> : <Music2 size={23}/>}</span><span>{site.school_name}<small>{site.tagline}</small></span></a>
         <a className="nav-link" href="#about">عن المدرسة</a>
         <a className="nav-link" href={`${import.meta.env.BASE_URL}admin`}>لوحة الإدارة</a>
       </nav>
