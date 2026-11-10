@@ -17,8 +17,8 @@
 ## إعداد Supabase
 1. أنشئ مشروعًا جديدًا في Supabase.
 2. افتح SQL Editor وشغّل الملف `supabase/schema.sql`.
-3. أضف بيانات الاتصال العامة إلى ملف البيئة المحلي.
-4. أنشئ حساب المسؤول الأول من Supabase Auth، ثم عيّن دوره `super_admin` في جدول `profiles` من لوحة Supabase.
+3. رابط مشروع Supabase مضبوط بالفعل في `.env.example`. انسخ الملف إلى `.env.local` وضع فيه المفتاح العام Publishable الذي حصلت عليه من إعدادات المشروع.
+4. لا ترفع ملف `.env.local` إلى GitHub. أنشئ حساب المسؤول الأول من Supabase Auth، ثم أضف سجلًا مطابقًا لمعرّف الحساب في جدول `profiles` واجعل دوره `super_admin`.
 
 ## الأمان
 - لا تضع مفتاح `service_role` أو أي مفتاح سري في الواجهة أو GitHub.
