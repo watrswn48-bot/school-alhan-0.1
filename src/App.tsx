@@ -3,7 +3,7 @@ import { ArrowLeft, Bell, BookOpen, GraduationCap, Music2, Search, ShieldCheck, 
 import { supabase } from './lib/supabase'
 import Admin from './Admin'
 
-type Announcement = { id: string; title: string; body: string; created_at: string }
+type Announcement = { id: string; title: string; body: string; created_at: string }\ntype PublicSettings = { school_name:string; tagline:string; hero_title:string; hero_description:string; logo_url:string; about_text:string }
 type StudentResult = { student_name: string; student_code: string; class_name: string; academic_year: string; level_name: string; subjects: { subject_name: string; score: number | null; final_grade: number; passing_grade: number; passed: boolean }[] }
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [result, setResult] = useState<StudentResult | null>(null)
-  const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [announcements, setAnnouncements] = useState<Announcement[]>([])\n  const [site, setSite] = useState<PublicSettings>({school_name:'ألحان تي اتشرومبي',tagline:'بوابة المدرسة الإلكترونية',hero_title:'كل خطوة في رحلة التعلّم تهمّنا',hero_description:'{site.hero_description}',logo_url:'',about_text:'{site.about_text}'})
 
   useEffect(() => {
     if (!supabase) return
@@ -37,7 +37,7 @@ export default function App() {
   return (
     <main>
       <nav className="nav container">
-        <a className="brand" href="#"><span className="brand-mark"><Music2 size={23}/></span><span>ألحان تي اتشرومبي<small>بوابة المدرسة الإلكترونية</small></span></a>
+        <a className="brand" href="#"><span className="brand-mark"><Music2 size={23}/></span><span>{site.school_name}<small>{site.tagline}</small></span></a>
         <a className="nav-link" href="#about">عن المدرسة</a>
         <a className="nav-link" href={`${import.meta.env.BASE_URL}admin`}>لوحة الإدارة</a>
       </nav>
@@ -46,7 +46,7 @@ export default function App() {
         <div className="hero-glow glow-one"/><div className="hero-glow glow-two"/>
         <div className="container hero-content">
           <div className="eyebrow"><Sparkles size={15}/> بوابتكم التعليمية</div>
-          <h1>كل خطوة في<br/><span>رحلة التعلّم</span> تهمّنا</h1>
+          <h1>{site.hero_title.split(" ").slice(0,3).join(" ")}<br/><span>{site.hero_title.split(" ").slice(3).join(" ")}</span></h1>
           <p className="hero-copy">أهلاً بكم في الموقع الإلكتروني لمدرسة ألحان تي اتشرومبي، المكان المخصص لمتابعة النتائج ومعرفة آخر إعلانات المدرسة.</p>
           <a className="hero-cta" href="#results">تعرف على النتائج <ArrowLeft size={18}/></a>
           <div className="hero-stats"><div><strong>تعليم</strong><span>بمحبة واهتمام</span></div><i/><div><strong>متابعة</strong><span>مستمرة للطلاب</span></div><i/><div><strong>تواصل</strong><span>بكل سهولة</span></div></div>
@@ -79,7 +79,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="container about" id="about"><div className="about-icon"><BookOpen size={27}/></div><div><span className="kicker">مدرستنا</span><h2>مدرسة ألحان تي اتشرومبي</h2><p>نسعى إلى توفير تجربة تعليمية منظمة، تجمع بين الاهتمام بالطالب وسهولة التواصل ومتابعة المستوى الدراسي.</p></div></section>
+      <section className="container about" id="about"><div className="about-icon"><BookOpen size={27}/></div><div><span className="kicker">مدرستنا</span><h2>{site.school_name}</h2><p>نسعى إلى توفير تجربة تعليمية منظمة، تجمع بين الاهتمام بالطالب وسهولة التواصل ومتابعة المستوى الدراسي.</p></div></section>
       <footer><div className="container footer-inner"><span>© {new Date().getFullYear()} مدرسة ألحان تي اتشرومبي</span><span>بوابة المدرسة الإلكترونية</span></div></footer>
     </main>
   )
