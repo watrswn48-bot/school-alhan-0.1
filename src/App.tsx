@@ -4,7 +4,7 @@ import { supabase } from './lib/supabase'
 import Admin from './Admin'
 
 type Announcement = { id: string; title: string; body: string; created_at: string }
-type PublicSettings = { school_name: string; tagline: string; hero_title: string; hero_description: string; logo_url: string; about_text: string }
+type PublicSettings = { school_name: string; tagline: string; hero_title: string; hero_description: string; logo_url: string; about_text: string; primary_color: string }
 type StudentResult = { student_name: string; student_code: string; class_name: string; academic_year: string; level_name: string; subjects: { subject_name: string; score: number | null; final_grade: number; passing_grade: number; passed: boolean }[] }
 
 export default function App() {
@@ -20,6 +20,7 @@ export default function App() {
     hero_title: 'كل خطوة في رحلة التعلّم تهمّنا',
     hero_description: 'أهلاً بكم في الموقع الإلكتروني لمدرسة ألحان تي اتشرومبي، المكان المخصص لمتابعة النتائج ومعرفة آخر إعلانات المدرسة.',
     logo_url: '',
+    primary_color: '#1d3558',
     about_text: 'نسعى إلى توفير تجربة تعليمية منظمة، تجمع بين الاهتمام بالطالب وسهولة التواصل ومتابعة المستوى الدراسي.'
   })
 
@@ -46,7 +47,7 @@ export default function App() {
   }
 
   return (
-    <main>
+    <main style={{ '--school-primary': site.primary_color } as React.CSSProperties}>
       <nav className="nav container">
         <a className="brand" href="#">
           <span className="brand-mark">{site.logo_url ? <img src={site.logo_url} alt="" /> : <Music2 size={23} />}</span>
@@ -89,7 +90,7 @@ export default function App() {
         </div>
       </section>
       <section className="container about" id="about"><div className="about-icon"><BookOpen size={27} /></div><div><span className="kicker">مدرستنا</span><h2>{site.school_name}</h2><p>{site.about_text}</p></div></section>
-      <footer><div className="container footer-inner"><span>© {new Date().getFullYear()} {site.school_name}</span><span>بوابة المدرسة الإلكترونية</span><a href={`${import.meta.env.BASE_URL}admin`} className="admin-back">الإدارة</a></div></footer>
+      <footer><div className="container footer-inner"><span>© {new Date().getFullYear()} {site.school_name}</span><span>بوابة المدرسة الإلكترونية</span></div></footer>
     </main>
   )
 }
