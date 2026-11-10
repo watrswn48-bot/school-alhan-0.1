@@ -1,17 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft, Bell, BookOpen, GraduationCap, Music2, Search, ShieldCheck, Sparkles } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import Admin from './Admin'
 
 type Announcement = { id: string; title: string; body: string; created_at: string }
+type StudentResult = { student_name: string; student_code: string; class_name: string; academic_year: string; level_name: string; subjects: { subject_name: string; score: number | null; final_grade: number; passing_grade: number; passed: boolean }[] }
 
 export default function App() {
   if (window.location.pathname === '/admin') return <Admin />
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [result, setResult] = useState<Record<string, unknown> | null>(null)
-  const [announcements] = useState<Announcement[]>([])
+  const [result, setResult] = useState<StudentResult | null>(null)
+  const [announcements, setAnnouncements] = useState<Announcement[]>([])
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('announcements').select('id,title,body,created_at').eq('is_published', true).order('created_at', { ascending: false }).limit(6)
+      .then(({ data }) => setAnnouncements((data || []) as Announcement[]))
+  }, [])
 
   async function searchResult(e: React.FormEvent) {
     e.preventDefault()
@@ -24,7 +31,7 @@ export default function App() {
     setLoading(false)
     if (error) { setMessage('حصلت مشكلة أثناء البحث. حاول مرة تانية أو تواصل مع إدارة المدرسة.'); return }
     if (!data) { setMessage('لم يتم العثور على نتيجة منشورة بهذا الكود.'); return }
-    setResult(data as Record<string, unknown>)
+    setResult(data as StudentResult)
   }
 
   return (
@@ -56,7 +63,11 @@ export default function App() {
             <button className="primary-btn" disabled={loading}>{loading ? 'جاري البحث...' : 'عرض النتيجة'} <ArrowLeft size={18}/></button>
           </form>
           {message && <p className="notice" role="status">{message}</p>}
-          {result && <div className="result-preview"><ShieldCheck/><strong>تم العثور على النتيجة</strong><pre>{JSON.stringify(result, null, 2)}</pre></div>}
+          {result && <div className="result-preview">
+            <div className="result-student"><ShieldCheck/><div><strong>{result.student_name}</strong><small>{result.level_name} · {result.academic_year} · {result.class_name}</small></div></div>
+            <div className="result-subjects">{result.subjects.map((subject, index) => <div className="result-subject" key={index}><span>{subject.subject_name}</span><strong>{subject.score ?? '—'} / {subject.final_grade}</strong><small>{subject.score === null ? 'لم تُسجل الدرجة' : subject.passed ? 'ناجح' : 'لم يحقق درجة النجاح'}</small></div>)}</div>
+            <div className="result-total"><span>مجموع الدرجات المنشورة</span><strong>{result.subjects.reduce((sum, subject) => sum + (Number(subject.score) || 0), 0)}</strong></div>
+          </div>}
           <div className="privacy"><ShieldCheck size={15}/> تظهر فقط النتائج التي اعتمدتها إدارة المدرسة.</div>
         </div>
       </section>
