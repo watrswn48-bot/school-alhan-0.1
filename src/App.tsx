@@ -7,7 +7,7 @@ type Announcement = { id: string; title: string; body: string; created_at: strin
 type StudentResult = { student_name: string; student_code: string; class_name: string; academic_year: string; level_name: string; subjects: { subject_name: string; score: number | null; final_grade: number; passing_grade: number; passed: boolean }[] }
 
 export default function App() {
-  if (window.location.pathname === '/admin') return <Admin />
+  if (window.location.pathname.replace(/\/$/, '').endsWith('/admin')) return <Admin />
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
