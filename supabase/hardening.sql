@@ -38,6 +38,9 @@ begin
   if new.score is not null and (new.score < 0 or new.score > max_score) then
     raise exception 'Score must be between zero and the subject final grade';
   end if;
+  if new.status in ('ready','published') and new.score is null then
+    raise exception 'A score is required before a grade can be reviewed or published';
+  end if;
 
   if not public.is_super_admin() then
     if not public.can_manage_class_subject(new.class_subject_id) then
@@ -97,6 +100,14 @@ drop trigger if exists classes_term_year_guard on public.classes;
 create trigger classes_term_year_guard
 before insert or update of academic_year_id, term_id on public.classes
 for each row execute function public.guard_class_term_year();
+
+-- Normalize any pre-existing duplicate current-year flags before enforcing uniqueness.
+with ranked as (
+  select id, row_number() over (partition by level_id order by sort_order desc, id) as rn
+  from public.academic_years where is_current = true
+)
+update public.academic_years ay set is_current = false
+from ranked r where ay.id = r.id and r.rn > 1;
 
 -- Only one current academic year per level.
 create unique index if not exists academic_years_one_current_per_level
