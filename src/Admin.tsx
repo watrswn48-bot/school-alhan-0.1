@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { ArrowRight, LogOut, ShieldCheck, Music2, RefreshCw, Settings, Users, CheckSquare } from 'lucide-react'
+import { ArrowRight, LogOut, ShieldCheck, Music2, RefreshCw } from 'lucide-react'
 import { supabase } from './lib/supabase'
 
 type Profile = { display_name: string; role: 'super_admin' | 'staff' }
