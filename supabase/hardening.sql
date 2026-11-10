@@ -73,3 +73,31 @@ revoke all on function public.is_super_admin() from public, anon;
 revoke all on function public.can_manage_class_subject(uuid) from public, anon;
 grant execute on function public.is_super_admin() to authenticated;
 grant execute on function public.can_manage_class_subject(uuid) to authenticated;
+
+
+-- A term must belong to the same academic year as its class.
+create or replace function public.guard_class_term_year()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.terms t
+    where t.id = new.term_id and t.academic_year_id = new.academic_year_id
+  ) then
+    raise exception 'The selected term does not belong to the selected academic year';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists classes_term_year_guard on public.classes;
+create trigger classes_term_year_guard
+before insert or update of academic_year_id, term_id on public.classes
+for each row execute function public.guard_class_term_year();
+
+-- Only one current academic year per level.
+create unique index if not exists academic_years_one_current_per_level
+on public.academic_years(level_id) where is_current = true;
